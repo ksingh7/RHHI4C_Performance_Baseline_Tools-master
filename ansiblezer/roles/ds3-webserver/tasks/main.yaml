@@ -1,0 +1,55 @@
+---
+- name: Install Packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git
+    - httpd
+    - php
+    - php-mysql
+
+- name: Git clone DS3 repository
+  git:
+    repo: 'https://github.com/dvdstore/ds3/'
+    dest: /home/cloud-user/ds3
+
+- name: Create DS3 directory under apache
+  file:
+    path: /var/www/html/ds3
+    state: directory
+    mode: 0755
+
+- name: Copy contents of ds3-webserver to apache hosting
+  synchronize:
+    src: /home/cloud-user/ds3/ds3/mysqlds3/web/php5/
+    dest: /var/www/html/ds3/ 
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Update php.in with DB host,user and password
+  lineinfile:
+    path: /etc/php.ini
+    regexp: "^{{ item.param }}"
+    insertafter: "^;{{ item.param }}"
+    line: "{{ item.param }} = {{ item.value }}"
+  with_items:
+     - { param: 'mysql.default_host', value: '127.0.0.1' }
+     - { param: 'mysql.default_user', value: 'web' }
+     - { param: 'mysql.default_password', value: 'web' }
+
+- name: start and enable apache service
+  service:
+    name: firewalld
+    state: stopped
+    enabled: false
+
+- name: start and enable apache service
+  service:
+    name: httpd
+    state: restarted
+    enabled: true
+
+- name: Set selinux to permissive
+  selinux:
+    policy: targeted
+    state: permissive

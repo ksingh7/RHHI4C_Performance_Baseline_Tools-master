@@ -1,0 +1,32 @@
+---
+- name: Configure pbench repository
+  template:
+    src: pbench-epel-7.repo
+    dest: /etc/yum.repos.d/pbench.repo
+    mode: 0644
+
+- name: Add  a host list file for pdsh
+  template:
+    src: hosts.list
+    dest: /root/hosts
+    mode: 0644
+
+- name: Install pbench-agent repo
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - firewalld
+    - pdsh
+    - vim
+    - wget
+    - sysstat
+    - screen
+    - pbench-agent
+    - pbench-fio
+
+- name: Start service firewalld
+  service:
+    name: firewalld
+    state: started
+    enabled: yes

@@ -1,0 +1,16 @@
+3
+Connection to 192.168.120.6 closed.
+3
+Connection to 192.168.120.14 closed.
+ds3-run.py:128: Warning: Data truncated for column 'threads' at row 1
+  x.execute("""INSERT INTO results (hostname, idstring, uuid, db_size, test_date, threads, nr_stacks, et, n_overall, ds_typ, opm, rt_tot_lastn_max, rt_tot_avg, n_login_overall, n_newcust_overall, n_browse_overall, rt_login_avg_msec, rt_newcust_avg_msec, rt_browse_avg_msec, rt_purchase_avg_msec, n_purchase_overall,  rt_tot_sampled, n_rollbacks_overall, rollback_rate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", (hostname, idstring, uid, db_size, test_date, threads, stacks, et, n_overall, typ, opm, rt_tot_lastn_max, rt_tot_avg, n_login_overall, n_newcust_overall, n_browse_overall, rt_login_avg_msec, rt_newcust_avg_msec, rt_browse_avg_msec, rt_purchase_avg_msec, n_purchase_overall, rt_tot_sampled, n_rollbacks_overall, rollback_rate))
+ds3-run.py:128: Warning: Incorrect double value: 'rt_reviewbrowse_avg_msec=37' for column 'rollback_rate' at row 1
+  x.execute("""INSERT INTO results (hostname, idstring, uuid, db_size, test_date, threads, nr_stacks, et, n_overall, ds_typ, opm, rt_tot_lastn_max, rt_tot_avg, n_login_overall, n_newcust_overall, n_browse_overall, rt_login_avg_msec, rt_newcust_avg_msec, rt_browse_avg_msec, rt_purchase_avg_msec, n_purchase_overall,  rt_tot_sampled, n_rollbacks_overall, rollback_rate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", (hostname, idstring, uid, db_size, test_date, threads, stacks, et, n_overall, typ, opm, rt_tot_lastn_max, rt_tot_avg, n_login_overall, n_newcust_overall, n_browse_overall, rt_login_avg_msec, rt_newcust_avg_msec, rt_browse_avg_msec, rt_purchase_avg_msec, n_purchase_overall, rt_tot_sampled, n_rollbacks_overall, rollback_rate))
+Flushing Hypervisor caches
+Database connection succesfully established
+Starting ds3 container number  0
+docker run -t -v /home/stack/RHHI4C_Performance_Baseline_Tools/ds3/ds3webdriver/DriverConfig.txt.server-1:/opt/app-root/app/driver_config.ini:Z dmesser/ds3webdriver:latest
+DB commit successful
+All docker instances finished
+Adding annotation to grafana 
+Grafana Annotation done

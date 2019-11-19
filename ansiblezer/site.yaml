@@ -1,0 +1,39 @@
+---
+- hosts: instances
+  sudo: true
+  roles:
+  - { role: common, tags: common }
+
+- hosts: instances
+  sudo: true
+  gather_facts: no
+  roles:
+  - { role: filesystem, tags: filesystem }
+  - { role: subscription-manager, tags: subscription }
+  - { role: ssh-keypair, tags: ssh }
+
+- hosts: instances
+  sudo: true
+  roles:
+  - { role: pbench, tags: pbench }
+
+- hosts: instances
+  sudo: true
+  vars:
+  - mysql_root_password: ""
+  - mysql_root_password_update: yes
+  - mysql_innodb_buffer_pool_size: 5G
+  - mysql_innodb_buffer_pool_instances: 5
+  - mysql_innodb_log_file_size: 2146435072
+  roles:
+  - { role: mysql , tags: mysql }
+
+- hosts: instances
+  sudo: true
+  roles:
+  - { role: ds3-webserver , tags: ds3 }
+
+- hosts: instances
+  sudo: true
+  roles:
+  - { role: glances , tags: glances }

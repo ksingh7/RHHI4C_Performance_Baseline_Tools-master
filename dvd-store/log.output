@@ -1,0 +1,7 @@
+Database connection succesfully established
+Starting ds2 container number  0
+docker run -t -v /home/stack/RHHI4C_Performance_Baseline_Tools/ds3/ds2webdriver/DriverConfig.txt.server-1:/opt/app-root/app/driver_config.ini:Z dmesser/ds2mysqldriver:latest
+DB commit successful
+All docker instances finished
+Adding annotation to grafana 
+Grafana Annotation done

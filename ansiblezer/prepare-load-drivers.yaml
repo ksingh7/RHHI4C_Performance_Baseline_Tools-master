@@ -1,0 +1,77 @@
+---
+- hosts: load-drivers
+  become: true
+  vars:
+    - DBhost: "'192.168.120.1'"
+    - DBuser: "'ds3-results-new'"
+    - DBpasswd: "'ds3-results-new'"
+    - DBname: "'ds3_results'"
+    - user: "cloud-user"
+  tasks:
+  - name: install docker
+    yum:
+      name: docker
+      state: present
+
+#  - name: install docker-python & MySQL-python
+#    yum:
+#      name: "{{ item }}"
+#      state: present
+#    with_items:
+#      - docker-python
+#      - MySQL-python
+
+  - name: start and enable docker
+    service:
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: pull down load driver containers
+    docker_image: name={{ item }}
+    with_items:
+       - dmesser/ds3webdriver
+
+  - name: create the directory for the ds3 config files
+    file: 
+      path: /home/stack/RHHI4C_Performance_Baseline_Tools/ds3/ds3webdriver
+      state: directory
+      owner: "{{ user }}"
+      group: "{{ user }}"
+
+  - name: create config files for the containers
+    template:
+        src: templates/ds3DriverConfig.txt.j2
+        dest: /home/stack/RHHI4C_Performance_Baseline_Tools/ds3/ds3webdriver/DriverConfig.txt.{{ item.server_name }}
+        owner: "{{ user }}"
+        group: "{{ user }}"
+    with_items:
+    - { server_name: 'server-1', server_ip: '172.21.1.172' }
+    - { server_name: 'server-2', server_ip: '172.21.1.163' }   
+    - { server_name: 'server-3', server_ip: '172.21.1.161' }
+    - { server_name: 'server-4', server_ip: '172.21.1.170' } 
+    - { server_name: 'server-5', server_ip: '172.21.1.169' }
+    - { server_name: 'server-6', server_ip: '172.21.1.164' } 
+    - { server_name: 'server-7', server_ip: '172.21.1.171' }
+    - { server_name: 'server-8', server_ip: '172.21.1.166' } 
+    - { server_name: 'server-9', server_ip: '172.21.1.174' }
+    - { server_name: 'server-10', server_ip: '172.21.1.173' }
+
+## Add a task to copy run_bench.py file to the node
+
+  - name: copy ds3 python runner file
+    template:
+      src: templates/ds3-run.py.j2
+      dest: /home/stack/RHHI4C_Performance_Baseline_Tools/ds3/ds3-run.py
+      mode: 0774
+      owner: "{{ user }}"
+      group: "{{ user }}"
+
+  - name: copy test runner shell script file
+    template:
+      src: templates/test-runner.sh
+      dest: /home/stack/RHHI4C_Performance_Baseline_Tools/ds3/test-runner.sh
+      mode: 0774
+      owner: "{{ user }}"
+      group: "{{ user }}"
+    

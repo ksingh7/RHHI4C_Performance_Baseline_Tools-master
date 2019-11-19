@@ -1,0 +1,12 @@
+heat_template_version: queens
+
+resources:
+  rg:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count: 10
+      resource_def: 
+        type: rhel_server.yaml
+        properties:
+          instance_name: rhel75-server-%index%
+          volume_name: volume-%index%

@@ -1,0 +1,31 @@
+cluster:
+  user: "heat-admin"
+  head: "controller-0"
+  clients: ["controller-0","R630compute-0","R630compute-1","R220compute-0"]
+  mons:
+    controller-0:
+      a: "controller-0"
+  osds_per_osd-compute-: 12
+  iterations: 1
+  rebuild_every_test: False
+  use_existing: True
+  clusterid: "ceph"
+  tmp_dir: "/tmp/cbt"
+  pool_profiles:
+    replicated:
+      pg_size: 1024
+      pgp_size: 1024
+      replication: 3
+benchmarks:
+  radosbench:
+    op_size: [ 4194304 , 4096 ]
+    write_only: False
+    time: 300
+    concurrent_ops: [ 128 ]
+    concurrent_procs: 1
+    use_existing: True
+    pool_profile: "replicated"
+    pool_per_proc: False
+    target_pool: "radosbench"
+    readmode: "seq"
+    osd_ra: [131072]

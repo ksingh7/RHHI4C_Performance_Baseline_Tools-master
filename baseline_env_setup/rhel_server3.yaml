@@ -1,0 +1,84 @@
+heat_template_version: 2016-10-14
+
+description: This template will create one instance and assign a floating IP address and volume to it.
+
+parameters:
+  image_name:
+    type: string
+    description: RHEL 7.5 Image name
+    default: 'rhel-server-7.5'
+  flavor_small:
+    type: string
+    description: Instance flavor small
+    default: 'm1.small' 
+  flavor_medium:
+    type: string
+    description: Instance flavor medium
+    default: 'm1.medium' 
+  security_group_name:
+    type: string
+    description: name of the security group
+    default: 'security_group1'
+  keypair_name:
+    type: string
+    description: ssh key required for server creation
+    default: 'stack'  
+    
+  tenant_net_name:
+    type: string
+    description: Name of the tenant network.
+    default: 'private_network1'
+  tenant_subnet_name:
+    type: string
+    description: Name of the tenant subnet.
+    default: 'private_network1_subnet1'
+    
+  provider_net_name:
+    type: string
+    description: Name of the tenant network.
+    default: 'external_network1'
+
+  instance1_name:
+    type: string
+    description: name of the instance
+    default: 'server-3'
+
+resources:
+
+  server1:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: instance1_name }
+      image: { get_param: image_name }
+      flavor: { get_param: flavor_medium }
+      key_name:  { get_param: keypair_name }
+      networks:
+        - port: { get_resource: server1_port }
+
+  server1_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: tenant_net_name }
+      fixed_ips:
+        - subnet: { get_param: tenant_subnet_name }
+      security_groups: 
+        - { get_param: security_group_name }
+
+  server1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_param: provider_net_name }
+      port_id: { get_resource: server1_port }
+
+  server1_volume:
+    type: OS::Cinder::Volume
+    properties:
+      name: "volume-1"
+      description: "server-3 volume-1"
+      size: 100
+
+  server1_volume_attach:
+    type: OS::Cinder::VolumeAttachment
+    properties:
+      volume_id: { get_resource: server1_volume }
+      instance_uuid: { get_resource: server1 }      
